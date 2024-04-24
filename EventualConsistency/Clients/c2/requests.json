@@ -1,0 +1,3 @@
+[
+    {"type":"get", "key":"name", "replica":2}
+]

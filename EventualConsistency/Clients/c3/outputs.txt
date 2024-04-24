@@ -1,0 +1,2 @@
+Value of key age is 30
+Key age with a value of 40 set to the store.
