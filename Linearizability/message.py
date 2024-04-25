@@ -1,21 +1,25 @@
 import hashlib
 class RequestMessage():
-    def __init__(self, msg_id, msg_time, host, port, messageType, replica):
+    def __init__(self, msg_id, msg_time, senderId, host, port, messageType, replica):
         self.msg_id = msg_id
         self.msg_time = msg_time
+        self.senderId = senderId
         self.senderHost = host
         self.senderPort = port
         self.messageType = messageType
         self.replica = replica
-        self.hash = hashlib.md5(f"{self.msg_id} {self.msg_time}".encode())
+        self.hash = str(msg_id) + "_" + str(msg_time)
         self.acks = 0
         
+    def __lt__(self, other):
+        return float(self.msg_time) < float(other.msg_time)
+        
     def serialize(self):
-        return "MSG " + self.messageType+ f" {self.msg_id} {self.msg_time} " + self.senderHost + f" {self.senderPort}" + f" {self.replica}"
+        return "MSG " + self.messageType+ f" {self.msg_id} {self.msg_time} {self.senderId} " +  self.senderHost + f" {self.senderPort}" + f" {self.replica}"
         
 class SetMessage(RequestMessage):
-    def __init__(self,  msg_id, msg_time, host, port, key, value, replica, broadcast, messageType ="set"):
-        super().__init__(msg_id, msg_time, host, port, messageType, replica)
+    def __init__(self,  msg_id, msg_time, senderId, host, port, key, value, replica, broadcast, messageType ="set"):
+        super().__init__(msg_id, msg_time, senderId, host, port, messageType, replica)
         self.key = key
         self.value = value
         self.broadcast = broadcast
@@ -30,23 +34,25 @@ class SetMessage(RequestMessage):
         messageType = msgList[1]
         msg_id = msgList[2]
         msg_time = msgList[3]
-        senderHost = msgList[4]
-        senderPort = msgList[5]
-        replica = msgList[6]
-        key = msgList[7]
-        value = msgList[8]
-        broadcast = msgList[9]
+        senderId = msgList[4]
+        senderHost = msgList[5]
+        senderPort = msgList[6]
+        replica = msgList[7]
+        key = msgList[8]
+        value = msgList[9]
+        broadcast = msgList[10]
         
-        return SetMessage(msg_id, msg_time, senderHost, senderPort,  key, value, replica, broadcast, messageType)
+        return SetMessage(msg_id, msg_time, senderId, senderHost, senderPort,  key, value, replica, broadcast, messageType)
         
         
 class GetMessage(RequestMessage):
-    def __init__(self, msg_id, msg_time,host, port, key, replica, messageType = "get"):
-        super().__init__(msg_id, msg_time, host, port, messageType, replica)
+    def __init__(self, msg_id, msg_time, senderId, host, port, key, replica, broadcast, messageType = "get"):
+        super().__init__(msg_id, msg_time, senderId, host, port, messageType, replica)
         self.key = key
+        self.broadcast = broadcast
         
     def serialize(self):
-        return super().serialize() + f" {self.key}"
+        return super().serialize() + f" {self.key} {self.broadcast}"
     
     @staticmethod
     def deserialize(message):
@@ -54,39 +60,40 @@ class GetMessage(RequestMessage):
         messageType = msgList[1]
         msg_id = msgList[2]
         msg_time = msgList[3]
-        senderHost = msgList[4]
-        senderPort = msgList[5]
-        replica = msgList[6]
-        key = msgList[7]
+        senderId = msgList[4]
+        senderHost = msgList[5]
+        senderPort = msgList[6]
+        replica = msgList[7]
+        key = msgList[8]
+        broadcast = msgList[9]
         
-        return GetMessage(msg_id, msg_time, senderHost, senderPort, key, replica, messageType)
+        return GetMessage(msg_id, msg_time, senderId, senderHost, senderPort, key, replica, broadcast, messageType)
     
     
     
-    
+
 class Acknowledgement():
-    def __init__(self, messageType, msg_id, msg_time, host, port) -> None:
-        self.messsageType = messageType
+    def __init__(self, msg_id, msg_time, senderId, host, port, hashValue) -> None:
         self.msg_id = msg_id
         self.msg_time = msg_time
+        self.senderId = senderId
         self.senderHost = host
         self.senderPort = port
-        self.hash = hashlib.md5(f"{self.msg_id} {self.msg_time}".encode())
+        self.hash = hashValue
         
     def serialize(self):
-        return "ACK " + self.senderHost + f" {self.senderPort} " + self.messsageType
-        
-        
-class SetAcknowledgement(Acknowledgement):
-    def __init__(self, msg_id, msg_time, host, port,messageType = "set_ack"):
-        self.super().__init__(messageType, msg_id, msg_time, host, port)   
-        
-    def serialize(self):
-        return self.super().serialize()
+        return "ACK " + f"{self.msg_id} {self.msg_time} {self.senderId} "+ self.senderHost + f" {self.senderPort}" + f" {self.hash}"
     
-class GetAcknowledgement(RequestMessage):
-    def __init__(self, msg_id, msg_time, host, port, messageType = "get_ack"):
-        self.super().__init__(messageType, msg_id, msg_time, host, port)
+    
+    @staticmethod
+    def deserialize(message):
+        msgList = message.split(" ")
+        msg_id = msgList[1]
+        msg_time = msgList[2]
+        senderId = msgList[3]
+        senderHost = msgList[4]
+        senderPort = msgList[5]
+        hashValue = msgList[6]
         
-    def serialize(self):
-        return self.super().serialize()
+        return Acknowledgement(msg_id, msg_time, senderId, senderHost, senderPort, hashValue)
+

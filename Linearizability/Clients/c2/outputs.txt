@@ -1,1 +1,2 @@
-Value of key name is None
+Value of key age is None
+Key age with a value of 23 set to the store.

@@ -34,12 +34,12 @@ class Client():
         
     def setRequest(self,key,value, replica_id):
         cur_time = datetime.datetime.now().timestamp() * 1000
-        msg = SetMessage(self.clock, cur_time, self.host, self.port, key, value, replica_id, True).serialize()
+        msg = SetMessage(self.clock, cur_time, "", self.host, self.port, key, value, replica_id, True).serialize()
         self.send(self.replicas[replica_id-1]["replicaHost"],self.replicas[replica_id-1]["replicaPort"],msg)
     
     def getRequest(self,key, replica_id):
         cur_time = datetime.datetime.now().timestamp() * 1000
-        msg = GetMessage(self.clock, cur_time, self.host, self.port, key, replica_id).serialize()
+        msg = GetMessage(self.clock, cur_time, "", self.host, self.port, key, replica_id, True).serialize()
         self.send(self.replicas[replica_id-1]["replicaHost"],self.replicas[replica_id-1]["replicaPort"],msg)
     
         

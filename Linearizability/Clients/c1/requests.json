@@ -1,6 +1,5 @@
 [
-    {"type":"set", "key":"name", "value":"Aditya", "replica":1},
-    {"type":"get", "key":"age", "replica":2}
+    {"type":"set", "key":"name", "value":"Aditya", "replica":1}
 ]
 
 
