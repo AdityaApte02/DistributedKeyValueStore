@@ -1,5 +1,5 @@
 Key major with a value of CS set to the store.
-Value of key name is None
+Value of key name is John
 Value of key city is None
 Key city with a value of Bloomington set to the store.
 Value of key major is CS
