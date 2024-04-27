@@ -1,0 +1,2 @@
+Value of key major is None
+Key major with a value of CS set to the store.

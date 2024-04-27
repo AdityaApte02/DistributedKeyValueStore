@@ -1,1 +1,2 @@
-Value of key age is None
+> 1714231052185.411  Key school with a value of Indiana set to the store.
+> 1714231058265.532  Value of key age is 23

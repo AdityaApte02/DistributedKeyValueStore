@@ -49,23 +49,25 @@ class Replica():
         try:
             while True:
                 if len(self.queue) > 0:
+                    # self.log(self.queue)
                     if self.queue[0].acks >= self.num_replicas:
-                        self.log("Executing the request")
-                        message = self.queue[0]
+                        message = heapq.heappop(self.queue)
                         if message.messageType == "set":
                             self.handleSetRequest(message.key, message.value)
                             reply = f"Key {message.key} with a value of {message.value} set to the store."
-                        if not self.checkReplicaPorts(message):
-                            if message.messageType == "get":
-                                value = self.handleGetRequest(self.queue[0].key)
-                                reply = f"Value of key {message.key} is {value}"
+                            if not self.checkReplicaPorts(message):
+                                self.send(message.senderHost, int(message.senderPort), reply)
+                        elif message.messageType =="get":
+                            time.sleep(2)
+                            value = self.handleGetRequest(message.key)
+                            reply = f"Value of key {message.key} is {value}"
+                            self.log(f"reply {reply}")
                             self.send(message.senderHost, int(message.senderPort), reply)
-                           
-                        heapq.heappop(self.queue)
+                        
                     else:
                         if self.queue[0].hash not in self.ack_dict:
-                            ackObject = Acknowledgement(self.queue[0].msg_id, self.queue[0].msg_time, self.id, self.host, self.port, self.queue[0].hash)
-                            time.sleep(2)
+                            self.log(f"ack_dict {list(self.ack_dict.keys())}")
+                            ackObject = Acknowledgement(self.queue[0].client_id, self.queue[0].client_time, self.id, self.host, self.port, self.queue[0].hash)
                             self.broadCast(ackObject.serialize(),True)
                             self.ack_dict[ackObject.hash] = True
                             
@@ -118,19 +120,28 @@ class Replica():
         except Exception as e:
             print(str(e))
             return False
+        
+        
+    def logMessage(self, message):
+        with open('./replica'+str(self.id)+'.txt', 'a') as file:
+            file.write(message+'\n')
     
     def messageDispatcher(self,message):
         try:
             msgList = message.split(" ")
             msg_type = msgList[0]
+        
+            self.logMessage(message)
+                
             if msg_type == "MSG":
                 request_type = msgList[1]
                 if request_type == "set":
                     setMessageObj = SetMessage.deserialize(message)
                     heapq.heapify(self.queue)
                     heapq.heappush(self.queue, copy.deepcopy(setMessageObj))
+                    self.log(self.queue)
                     if setMessageObj.broadcast == "True":
-                        time.sleep(1)
+                        # time.sleep(1)
                         setMessageObj.senderId = self.id
                         setMessageObj.senderHost = self.host
                         setMessageObj.senderPort = self.port
@@ -140,14 +151,11 @@ class Replica():
                         
                 elif request_type == "get":
                     getMessageObj = GetMessage.deserialize(message)
+                    getMessageObj.acks = self.num_replicas
                     heapq.heapify(self.queue)
                     heapq.heappush(self.queue, copy.deepcopy(getMessageObj))
-                    if getMessageObj.broadcast == "True":
-                        getMessageObj.senderId = self.id
-                        getMessageObj.senderHost = self.host
-                        getMessageObj.senderPort = self.port
-                        getMessageObj.broadcast = "False"
-                        failed = self.broadCast(getMessageObj.serialize())
+                    self.log(self.queue)
+
                    
                 
             elif msg_type == "ACK":
@@ -186,7 +194,6 @@ class Replica():
             
     def run(self):
         self.dataStore.flushall()
-        time.sleep(1)
         self.log(f"{self.id} is listening on port {self.port}.")
         listenThread = threading.Thread(target=self.listen, args=()).start()
         processQueueThread = threading.Thread(target=self.processQueue, args=()).start()

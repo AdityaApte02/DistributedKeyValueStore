@@ -1,0 +1,2 @@
+Value of key name is None
+Key name with a value of John set to the store.

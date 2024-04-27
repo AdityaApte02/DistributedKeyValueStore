@@ -1,1 +1,3 @@
-Key name with a value of Aditya set to the store.
+> 1714231048125.49  Key name with a value of Aditya set to the store.
+> 1714231054220.777  Key major with a value of CS set to the store.
+> 1714231060293.644  Value of key school is Indiana

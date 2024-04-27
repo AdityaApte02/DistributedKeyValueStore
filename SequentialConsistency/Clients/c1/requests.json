@@ -1,0 +1,9 @@
+[
+    {"type":"get", "key":"age", "replica":1},
+    {"type":"set", "key":"age", "value":"23", "replica":1},
+    {"type":"get", "key":"age", "replica":3}
+
+]
+
+
+

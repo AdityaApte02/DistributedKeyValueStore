@@ -7,7 +7,7 @@ class Driver():
         
     def run(self):
         ReplicaDriver()
-        time.sleep(2)
+        time.sleep(5)
         ClientDriver()
         time.sleep(0.1)
         print(f"Started the Clients and the Replicas")

@@ -1,3 +1,4 @@
 [
+    {"type":"set", "key":"school", "value":"Indiana", "replica":1},
     {"type":"get", "key":"age", "replica":2}
 ]

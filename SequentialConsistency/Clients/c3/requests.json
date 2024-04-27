@@ -1,0 +1,4 @@
+[
+    {"type":"set", "key":"major", "value":"CS", "replica":1},
+    {"type":"get", "key":"major", "replica":1}
+]

@@ -8,13 +8,15 @@ import random
 import datetime
 
 class Client():
-    def __init__(self,client_id, replicas,requests, congifObj, output_path):
+    def __init__(self,client_id, replicas,requests, configfObj, output_path):
         self.clock = random.randint(1, 50)
         self.client_id = client_id
         self.replicas = replicas
         self.requests = requests
-        self.host = congifObj["Clienthost"]
-        self.port = congifObj["Clientport"]
+        self.id = configfObj["ClientID"]
+        self.host = configfObj["Clienthost"]
+        self.port = configfObj["Clientport"]
+        self.clock = int(self.id)
         self.output_path = output_path
         print(f'Client {self.client_id} started')
         self.run()
@@ -33,20 +35,19 @@ class Client():
             return False
         
     def setRequest(self,key,value, replica_id):
-        cur_time = datetime.datetime.now().timestamp() * 1000
-        
-        msg = SetMessage(self.clock, cur_time, "", self.host, self.port, key, value, replica_id, True).serialize()
+        self.clock = self.clock + int(self.id)
+        msg = SetMessage(self.id, self.clock, self.id, self.host, self.port, key, value, replica_id, True).serialize()
         self.send(self.replicas[replica_id-1]["replicaHost"],self.replicas[replica_id-1]["replicaPort"],msg)
     
     def getRequest(self,key, replica_id):
-        cur_time = datetime.datetime.now().timestamp() * 1000
-        msg = GetMessage(self.clock, cur_time, "", self.host, self.port, key, replica_id, True).serialize()
+        self.clock = self.clock + int(self.id)
+        msg = GetMessage(self.id, self.clock, self.id , self.host, self.port, key, replica_id, True).serialize()
         self.send(self.replicas[replica_id-1]["replicaHost"],self.replicas[replica_id-1]["replicaPort"],msg)
     
         
     def handleReponse(self,response):
         with open(self.output_path, "a") as file:
-            file.write(f"> {datetime.datetime.now().timestamp() * 1000}  "+response + "\n")
+            file.write(response + "\n")
         
         
         
@@ -63,14 +64,13 @@ class Client():
         
     def sendRequest(self,request):
         for request in self.requests:
-            # self.handleReponse("Request: "+str(request))
-            print("Sending messages",request)
+            print("request", request)
             self.clock = self.clock + random.randint(1,10)
             if request["type"] == "set":
                 self.setRequest(request["key"],request["value"],request["replica"])
             elif request["type"] == "get":
                 self.getRequest(request["key"],request["replica"])
-            time.sleep(0.1)
+            time.sleep(3)
             
             
     def clearBuffers(self):

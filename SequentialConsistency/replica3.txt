@@ -1,0 +1,54 @@
+MSG set 3 7 1 localhost 5000 1 major CS False
+ACK 3 7 2 localhost 5001 3_7
+ACK 3 7 3 localhost 5002 3_7
+MSG set 1 9 1 localhost 5000 1 age 23 False
+MSG set 2 17 1 localhost 5000 1 name John False
+ACK 2 17 2 localhost 5001 2_17
+ACK 2 17 3 localhost 5002 2_17
+MSG get 1 13 1 localhost 7000 3 age True
+ACK 1 13 3 localhost 5002 1_13
+ACK 2 17 1 localhost 5000 2_17
+ACK 3 7 1 localhost 5000 3_7
+ACK 1 9 1 localhost 5000 1_9
+ACK 1 9 2 localhost 5001 1_9
+ACK 1 9 3 localhost 5002 1_9
+MSG set 3 11 1 localhost 5000 1 major CS False
+ACK 3 11 2 localhost 5001 3_11
+ACK 3 11 3 localhost 5002 3_11
+ACK 3 11 1 localhost 5000 3_11
+MSG set 1 7 1 localhost 5000 1 age 23 False
+MSG set 2 16 1 localhost 5000 1 name John False
+ACK 1 7 2 localhost 5001 1_7
+ACK 2 16 2 localhost 5001 2_16
+ACK 1 7 3 localhost 5002 1_7
+ACK 2 16 3 localhost 5002 2_16
+ACK 2 16 1 localhost 5000 2_16
+MSG get 1 10 1 localhost 7000 3 age True
+ACK 1 10 3 localhost 5002 1_10
+ACK 1 7 1 localhost 5000 1_7
+MSG set 3 10 1 localhost 5000 1 major CS False
+ACK 3 10 2 localhost 5001 3_10
+ACK 3 10 3 localhost 5002 3_10
+ACK 3 10 1 localhost 5000 3_10
+MSG set 1 13 1 localhost 5000 1 age 23 False
+MSG set 2 11 1 localhost 5000 1 name John False
+ACK 1 13 2 localhost 5001 1_13
+ACK 1 13 3 localhost 5002 1_13
+ACK 2 11 2 localhost 5001 2_11
+ACK 2 11 3 localhost 5002 2_11
+ACK 2 11 1 localhost 5000 2_11
+ACK 1 13 1 localhost 5000 1_13
+MSG get 1 22 1 localhost 7000 3 age True
+MSG set 3 9 1 localhost 5000 1 major CS False
+ACK 3 9 3 localhost 5002 3_9
+ACK 3 9 2 localhost 5001 3_9
+MSG set 1 12 1 localhost 5000 1 age 23 False
+MSG set 2 16 1 localhost 5000 1 name John False
+ACK 1 12 2 localhost 5001 1_12
+ACK 1 12 3 localhost 5002 1_12
+ACK 1 12 1 localhost 5000 1_12
+ACK 2 16 2 localhost 5001 2_16
+ACK 2 16 3 localhost 5002 2_16
+MSG get 1 18 1 localhost 7000 3 age True
+ACK 2 16 1 localhost 5000 2_16
+ACK 3 9 1 localhost 5000 3_9

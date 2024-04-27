@@ -1,5 +1,7 @@
 [
-    {"type":"set", "key":"name", "value":"Aditya", "replica":1}
+    {"type":"set", "key":"name", "value":"Aditya", "replica":1},
+    {"type":"set", "key":"major", "value":"CS", "replica":2},
+    {"type":"get", "key":"school", "replica":3}
 ]
 
 
