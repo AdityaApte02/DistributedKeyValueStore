@@ -1,1 +1,8 @@
-{"type":"get", "key":"age", "replica":2}
+ {"type":"set", "key":"major", "value":"CS", "replica":1},
+    {"type":"get", "key":"major", "replica":1}
+
+
+
+{"type":"get", "key":"name", "replica":1},
+    {"type":"set", "key":"name", "value":"John", "replica":1},
+    {"type":"get", "key":"name", "replica":2}

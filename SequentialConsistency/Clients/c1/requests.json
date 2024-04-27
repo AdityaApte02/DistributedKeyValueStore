@@ -1,7 +1,7 @@
 [
-    {"type":"get", "key":"age", "replica":1},
-    {"type":"set", "key":"age", "value":"23", "replica":1},
-    {"type":"get", "key":"age", "replica":3}
+    {"type":"get", "key":"salary", "replica":1},
+    {"type":"set", "key":"salary", "value":"23", "replica":1},
+    {"type":"get", "key":"salary", "replica":3}
 
 ]
 

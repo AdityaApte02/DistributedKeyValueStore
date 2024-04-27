@@ -1,3 +1,3 @@
-Value of key age is None
-Key age with a value of 23 set to the store.
-Value of key age is 23
+Value of key salary is None
+Key salary with a value of 23 set to the store.
+Value of key salary is 23

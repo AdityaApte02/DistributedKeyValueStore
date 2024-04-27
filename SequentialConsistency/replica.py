@@ -51,7 +51,8 @@ class Replica():
                 if len(self.queue) > 0:
                     # self.log(self.queue)
                     if self.queue[0].acks >= self.num_replicas:
-                        message = heapq.heappop(self.queue)
+                        # message = heapq.heappop(self.queue)
+                        message = self.queue.pop(0)
                         if message.messageType == "set":
                             self.handleSetRequest(message.key, message.value)
                             reply = f"Key {message.key} with a value of {message.value} set to the store."
@@ -125,6 +126,26 @@ class Replica():
     def logMessage(self, message):
         with open('./replica'+str(self.id)+'.txt', 'a') as file:
             file.write(message+'\n')
+            
+            
+    def reorderMessageQueue(self, message):
+        self.log(f"message {message}")
+        for index,msg in enumerate(self.queue):
+            self.log(f"msg {msg}")
+            if msg.client_id == message.client_id:
+                if msg.client_time > message.client_time:
+                    self.queue.insert(index, copy.deepcopy(message))
+                    return
+                
+        self.queue.append(copy.deepcopy(message))
+        return
+                
+                
+                
+    def printQueue(self):
+        for msg in self.queue:
+            self.log(msg)
+        print("-----------------------------------------")
     
     def messageDispatcher(self,message):
         try:
@@ -132,35 +153,40 @@ class Replica():
             msg_type = msgList[0]
         
             self.logMessage(message)
-                
             if msg_type == "MSG":
                 request_type = msgList[1]
                 if request_type == "set":
                     setMessageObj = SetMessage.deserialize(message)
-                    heapq.heapify(self.queue)
-                    heapq.heappush(self.queue, copy.deepcopy(setMessageObj))
-                    self.log(self.queue)
+                    self.reorderMessageQueue(setMessageObj)
+                    
+                    # self.printQueue()
+                    # heapq.heapify(self.queue)
+                    # heapq.heappush(self.queue, copy.deepcopy(setMessageObj))
                     if setMessageObj.broadcast == "True":
-                        # time.sleep(1)
                         setMessageObj.senderId = self.id
                         setMessageObj.senderHost = self.host
                         setMessageObj.senderPort = self.port
                         setMessageObj.broadcast = "False"
                         msg = setMessageObj.serialize()
-                        failed = self.broadCast(msg)       
+                        failed = self.broadCast(msg)
+                        
+                    else:
+                        self.log(f"Relayed msg {message} and client time {setMessageObj.client_time}")       
                         
                 elif request_type == "get":
                     getMessageObj = GetMessage.deserialize(message)
                     getMessageObj.acks = self.num_replicas
-                    heapq.heapify(self.queue)
-                    heapq.heappush(self.queue, copy.deepcopy(getMessageObj))
-                    self.log(self.queue)
+                    self.reorderMessageQueue(getMessageObj)
+                    # self.printQueue()
+                    # heapq.heapify(self.queue)
+                    # heapq.heappush(self.queue, copy.deepcopy(getMessageObj))
+                   
 
                    
                 
             elif msg_type == "ACK":
                 ackObj = Acknowledgement.deserialize(message)
-                self.log(f"Received an ack from {ackObj.senderId}")
+                # self.log(f"Received an ack from {ackObj.senderId}")
                 self.ack_list.append(ackObj)
                 self.processAcks()
             
@@ -173,10 +199,10 @@ class Replica():
         for messageObj in self.queue:
             for i in range(len(self.ack_list)):
                 ackObj = self.ack_list[i]
-                self.log(f"Comparing ack with hash {ackObj.hash} with message with hash {messageObj.hash} for {ackObj.senderId}")
+                # self.log(f"Comparing ack with hash {ackObj.hash} with message with hash {messageObj.hash} for {ackObj.senderId}")
                 if messageObj.hash == ackObj.hash:
                     messageObj.acks += 1
-                    self.log(f"Incrementing acks for message with hash {messageObj.hash} to {messageObj.acks}")
+                    # self.log(f"Incrementing acks for message with hash {messageObj.hash} to {messageObj.acks}")
                     self.ack_list.pop(i)
                     break
         
@@ -192,8 +218,14 @@ class Replica():
             self.messageDispatcher(data.decode("utf-8")) 
             
             
+    def clearBuffers(self):
+        with open("replica"+str(self.id)+".txt", 'w') as file:
+            pass
+            
+            
     def run(self):
         self.dataStore.flushall()
+        self.clearBuffers()
         self.log(f"{self.id} is listening on port {self.port}.")
         listenThread = threading.Thread(target=self.listen, args=()).start()
         processQueueThread = threading.Thread(target=self.processQueue, args=()).start()

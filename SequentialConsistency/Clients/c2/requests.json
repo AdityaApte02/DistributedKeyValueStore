@@ -1,4 +1,5 @@
 [
     {"type":"get", "key":"name", "replica":1},
-    {"type":"set", "key":"name", "value":"John", "replica":1}
+    {"type":"set", "key":"name", "value":"John", "replica":1},
+    {"type":"get", "key":"name", "replica":2}
 ]

@@ -11,14 +11,14 @@ class RequestMessage():
         self.hash = str(client_id) + "_" + str(client_time)
         self.acks = 0
         
-    def __lt__(self, other):
-        if self.client_time == other.client_time:
-            return self.client_id < other.client_id
-        return self.client_time < other.client_time
+    # def __lt__(self, other):
+    #     if self.client_time == other.client_time:
+    #         return self.client_id < other.client_id
+    #     return self.client_time < other.client_time
     
     
     def __str__(self) -> str:
-        return self.messageType + ' ' + self.client_time + ' ' + self.acks
+        return self.messageType + ' ' + str(self.client_id) + ' ' + str(self.client_time)
         
     def serialize(self):
         return "MSG " + self.messageType+ f" {self.client_id} {self.client_time} {self.senderId} " +  self.senderHost + f" {self.senderPort}" + f" {self.replica}"
@@ -32,7 +32,7 @@ class SetMessage(RequestMessage):
         
         
     def __str__(self) -> str:
-        return super().__str__() + self.key + self.value 
+        return super().__str__() + " " + self.key + " " + self.value 
         
     def serialize(self):
         return super().serialize() + f" {self.key} {self.value} {self.broadcast}"
@@ -62,7 +62,7 @@ class GetMessage(RequestMessage):
         self.broadcast = broadcast
         
     def __str__(self) -> str:
-        return super().__str__() + self.key
+        return super().__str__() + " " + self.key
         
     def serialize(self):
         return super().serialize() + f" {self.key} {self.broadcast}"
