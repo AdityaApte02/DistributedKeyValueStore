@@ -1,3 +1,5 @@
 Value of key salary is None
 Key salary with a value of 23 set to the store.
 Value of key salary is 23
+Key salary with a value of 50000000 set to the store.
+Value of key salary is 50000000

@@ -1,2 +1,2 @@
-> 1714231052185.411  Key school with a value of Indiana set to the store.
-> 1714231058265.532  Value of key age is 23
+> 1714274291296.998  Key school with a value of Indiana set to the store.
+> 1714274297420.803  Value of key age is 23

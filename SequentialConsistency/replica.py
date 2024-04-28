@@ -49,6 +49,8 @@ class Replica():
         try:
             while True:
                 if len(self.queue) > 0:
+                    print(self.id,end="")
+                    self.printQueue()
                     # self.log(self.queue)
                     if self.queue[0].acks >= self.num_replicas:
                         # message = heapq.heappop(self.queue)
@@ -144,7 +146,7 @@ class Replica():
                 
     def printQueue(self):
         for msg in self.queue:
-            self.log(msg)
+            print(str(msg)+" ",end="")
         print("-----------------------------------------")
     
     def messageDispatcher(self,message):

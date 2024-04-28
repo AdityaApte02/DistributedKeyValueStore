@@ -1,2 +1,2 @@
-Value of key age is None
+Value of key age is 23
 Key name with a value of Aditya set to the store.
