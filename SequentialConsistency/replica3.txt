@@ -1,21 +1,17 @@
 MSG set 3 16 1 localhost 5000 1 major CS False
 ACK 3 16 2 localhost 5001 3_16
 ACK 3 16 3 localhost 5002 3_16
-ACK 3 16 1 localhost 5000 3_16
-MSG set 1 9 1 localhost 5000 1 salary 23 False
-MSG set 2 16 2 localhost 7001 3 name John True
-ACK 1 9 3 localhost 5002 1_9
-ACK 1 9 2 localhost 5001 1_9
-ACK 1 9 1 localhost 5000 1_9
-ACK 2 16 3 localhost 5002 2_16
-ACK 2 16 1 localhost 5000 2_16
-MSG get 1 16 1 localhost 7000 3 salary True
-ACK 2 16 2 localhost 5001 2_16
-MSG set 3 43 3 localhost 7002 3 city Bloomington True
-MSG set 1 21 1 localhost 7000 3 salary 50000000 True
-ACK 3 43 3 localhost 5002 3_43
-ACK 3 43 1 localhost 5000 3_43
-ACK 3 43 2 localhost 5001 3_43
-ACK 1 21 2 localhost 5001 1_21
-ACK 1 21 3 localhost 5002 1_21
-ACK 1 21 1 localhost 5000 1_21
+MSG set 1 14 1 localhost 5000 1 salary 23 False
+MSG set 2 13 2 localhost 7001 3 name John True
+ACK 1 14 2 localhost 5001 1_14
+ACK 1 14 3 localhost 5002 1_14
+ACK 2 13 3 localhost 5002 2_13
+ACK 2 13 1 localhost 5000 2_13
+MSG get 1 20 1 localhost 7000 3 salary True
+MSG set 3 42 3 localhost 7002 3 city Bloomington True
+MSG set 1 27 1 localhost 7000 3 salary 50000000 True
+ACK 3 42 3 localhost 5002 3_42
+ACK 3 42 2 localhost 5001 3_42
+ACK 1 27 3 localhost 5002 1_27
+ACK 1 27 2 localhost 5001 1_27
+MSG get 2 40 2 localhost 7001 3 city True

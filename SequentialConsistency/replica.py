@@ -51,9 +51,7 @@ class Replica():
                 if len(self.queue) > 0:
                     print(self.id,end="")
                     self.printQueue()
-                    # self.log(self.queue)
-                    if self.queue[0].acks >= self.num_replicas:
-                        # message = heapq.heappop(self.queue)
+                    if self.queue[0].acks >= self.num_replicas-1:
                         message = self.queue.pop(0)
                         if message.messageType == "set":
                             self.handleSetRequest(message.key, message.value)
